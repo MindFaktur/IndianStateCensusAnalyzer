@@ -15,11 +15,11 @@ class CensusGenerator:
 
     def csv_generator(self):
         with open('census.csv', 'w', newline='') as csv_file:
-            header = ["States", "population"]
-            writer_object = csv.writer(csv_file)
+            header = ["States", "Population", "StateCode"]
+            writer_object = csv.writer(csv_file, delimiter=',', )
             writer_object.writerow(header)
             for state in self.list_of_states:
-                data = [state, self.generate_random_population_number()]
+                data = [state, self.generate_random_population_number(), random.randrange(100000, 999999)]
                 writer_object.writerow(data)
 
 

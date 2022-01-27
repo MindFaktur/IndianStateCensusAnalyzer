@@ -1,5 +1,6 @@
 import csv
 import logging
+from Exception.census_analyzer_exception import CensusAnalyzerException
 
 #logging.basicConfig(filename='services/services_log.log', filemode='a', format=f'%(asctime)s - %(message)s',
 #                       level=logging.DEBUG)
@@ -33,15 +34,60 @@ class StateCensusAnalyzer:
         try:
             for row in file_reader_object:
                 number_of_records += 1
+
             if expected == number_of_records:
                 return True
             else:
-                return False
+                raise CensusAnalyzerException("Wrong records")
+        except CensusAnalyzerException as e:
+            logging.exception(e)
         except Exception:
             logging.exception("Error at record checker")
 
     def file_closer(self):
+        """
+        Closes the file object
+        :return:
+        """
         self.csv_file.close()
+
+    def file_type_checker(self):
+        """
+        check the file extension
+        :return: true or raise exception
+        """
+        if self.csv_file.name.endswith(".csv"):
+            return True
+        else:
+            raise CensusAnalyzerException("Wrong file type")
+
+    @staticmethod
+    def file_delimiter_checker(file_path):
+        """
+        File delimiter checker
+        :param file_path:
+        :return:
+        """
+        with open(file_path, newline='') as file:
+            file_lines = csv.Sniffer().sniff(file.read())
+            if file_lines.delimiter == ',':
+                return True
+            else:
+                raise CensusAnalyzerException("Wrong delimiter")
+
+    @staticmethod
+    def header_checker(file_path):
+        """
+        Check if the given file has header
+        :param file_path:
+        :return:
+        """
+        with open(file_path, newline='') as file:
+            file_lines = csv.Sniffer().has_header(file.read())
+            if file_lines:
+                return True
+            else:
+                raise CensusAnalyzerException("No header")
 
 
 
