@@ -1,7 +1,8 @@
 import csv
 import logging
 
-logging.basicConfig(filename='log.log', filemode='a', format=f'%(asctime)s - %(message)s', level=logging.DEBUG)
+#logging.basicConfig(filename='services/services_log.log', filemode='a', format=f'%(asctime)s - %(message)s',
+ #                       level=logging.DEBUG)
 
 
 class StateCensusAnalyzer:
@@ -31,7 +32,8 @@ class StateCensusAnalyzer:
         try:
             for row in file_reader_object:
                 number_of_records += 1
-            return expected == number_of_records
+            if expected == number_of_records:
+                return True
         except Exception:
             logging.exception("Error at record checker")
 
